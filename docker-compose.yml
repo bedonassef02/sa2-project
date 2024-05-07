@@ -108,6 +108,40 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
 
+  products_service:
+    build: ./products_service
+    container_name: products_service_container
+    ports:
+      - "5001:5001"
+    networks:
+      - ecommerce-app
+    links:
+      - products-mongodb
+    restart: on-failure
+    depends_on:
+      - products-mongodb
+    volumes:
+      - ./products_service:/app
+      - /app/node_modules
+  products-mongodb:
+    image: mongo
+    ports:
+      - "27019:27017"
+    networks:
+      - ecommerce-app
+    volumes:
+      - products-volume:/data/db
+  weather_service:
+    build: ./weather_service
+    container_name: weather_service_container
+    ports:
+      - "5002:5002"
+    networks:
+      - ecommerce-app
+    volumes:
+      - ./weather_service:/app
+      - /app/node_modules
+  
 networks:
   ecommerce-app:
 
@@ -115,3 +149,5 @@ volumes:
   cart_mongodb_data:
   category_mongodb_data:
   users_postgres_db_data:
+  products-volume:
+    driver: local
