@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  cart-service:
+    restart: always
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./:/code
+    depends_on:
+      - cart-mongodb
+
+  cart-mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - cart_mongodb:/data/db
+
+  category-service:
+    restart: always
+    build:
+      context: ./category-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./:/code
+    depends_on:
+      - category-mongodb
+
+  category-mongodb:
+    image: mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - category_mongodb:/data/db
+
+  postgres:
+    image: postgres:13.1
+    container_name: users-postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: bedo
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: users-db
+    volumes:
+      - users-postgres-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    container_name: users-service-db-connection-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  users-service:
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile
+    container_name: users-service
+    restart: always
+    ports:
+      - "3001:3000"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: bedo
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: users-db
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
+volumes:
+  category_mongodb:
+  cart_mongodb:
+  users-postgres-db:
