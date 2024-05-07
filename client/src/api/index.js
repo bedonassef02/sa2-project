@@ -1,4 +1,11 @@
 import axios from 'axios';
+const config = {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+    }
+  };
+
 
 const usersServiceApi = axios.create({
     baseURL: 'http://localhost:3001/users',
@@ -6,6 +13,7 @@ const usersServiceApi = axios.create({
 
 const CategoriesServiceApi = axios.create({
     baseURL: 'http://localhost:3003/category',
+    
 })
 const productsServiceApi = axios.create({
     baseURL: 'http://localhost:5001/api',
@@ -24,6 +32,7 @@ export const userAuthenticate = payload => usersServiceApi.post(`/login`, payloa
 export const userRegsiter = payload => usersServiceApi.post(`/register`, payload);
 export const getAllProducts = () => productsServiceApi.get(`/products`);
 export const getCategories = () => CategoriesServiceApi.get(`/`);
+export const addCategory = payload => CategoriesServiceApi.post(`/`, payload);
 export const getWeather = () => weatherServiceApi.get(`/weather`);
 
 export const getProductsFromCart = id => shoppingCartServiceApi.get(`/cart/${id}`);
@@ -36,7 +45,8 @@ const apis = {
     getProductsFromCart,
     addProductToCart,
     userRegsiter,
-    getCategories
+    getCategories,
+    addCategory
 }
 
 export default apis;

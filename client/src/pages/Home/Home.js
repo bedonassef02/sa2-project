@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import classes from "./Home.module.css";
 import { ProductCard } from "../ProductCard/ProductCard";
-import { useHistory } from "react-router-dom";
+import { useHistory,Link } from "react-router-dom";
 import api from "../../api";
+import { CategoriesCard } from "./Catcard";
 
 export const Home = ({ setIsAuthenticated }) => {
   const history = useHistory();
@@ -14,18 +15,36 @@ export const Home = ({ setIsAuthenticated }) => {
   const [weather, setWeather] = useState("");
   const [weatherError, setWeatherError] = useState(false);
   const [latestProductAddedToCart, setLatestProductAddedToCart] = useState();
+  const [name, setname] = useState("");
+
   const logoutHandler = () => {
     localStorage.removeItem("isAuthenticated");
     setIsAuthenticated(false);
     history.push("/");
   };
+  ////////////////addcategory/////////////////////
+  const addcategory = async()=> {
+    await api 
+    .addCategory({name})
+    .then((res) => {
+      console.log("addcategory", res.data);
+    })  
+  }
+  ///////////////////addproduct////////////////
+  const addproduct= async()=> {
+    await api 
+    .addCategory({name})
+    .then((res) => {
+      console.log("addcategory", res.data);
+    })  
+  }
   ///////////////catogory/////////////////////
   useEffect(async () => {
     await api
       .getCategories()
       .then((res) => {
         console.log("categories", res.data);
-        setCategories(res?.data?.data);
+        setCategories(res?.data);
       })
       .catch((err) => {
         console.log("products err", err);
@@ -36,11 +55,11 @@ export const Home = ({ setIsAuthenticated }) => {
       });
   }, []);
 ///////////////////////////////////////////////////
- /* useEffect(async () => {
+  useEffect(async () => {
     await api
       .getAllProducts()
       .then((products) => {
-        setProducts(products?.data?.data);
+        setProducts(products?.data);
       })
       .catch((err) => {
         console.log("products err", err);
@@ -51,7 +70,7 @@ export const Home = ({ setIsAuthenticated }) => {
       });
   }, []);
 
-  useEffect(async () => {
+ /* useEffect(async () => {
     const userId = localStorage.getItem("userId");
     await api
       .getProductsFromCart(userId)
@@ -71,7 +90,7 @@ export const Home = ({ setIsAuthenticated }) => {
         );
       });
   }, [products, latestProductAddedToCart]);
-
+*/
   useEffect(async () => {
     await api
       .getWeather()
@@ -87,7 +106,7 @@ export const Home = ({ setIsAuthenticated }) => {
         );
       });
   }, []);
-*/
+
   return (
     <>
       <span>Weather</span>
@@ -97,22 +116,39 @@ export const Home = ({ setIsAuthenticated }) => {
       </p>
       <span>Categories</span>
       <div className={classes.container}>
-        {productError && <p className={classes.errorMsg}>{productError}</p>}
-        {!productError &&
-          (products?.length > 0 ? (
-            products.map(({ _id, name, price, description }, index) => (
-              <ProductCard
+        
+        {
+          (Categories?.length > 0 ? (
+            Categories.map(({name}, index) => (
+              <CategoriesCard
                 key={index}
-                details={{ _id, name, price, description }}
-                setLatestProductAddedToCart={setLatestProductAddedToCart}
+                name={name}
+
               />
             ))
           ) : (
             <p className={classes.notFound}>No Products found.</p>
           ))}
       </div>
+      <div className={classes.container}>
+            <h1>Add Category</h1>
+            <br></br>
+            <form>
+                <input className={classes.input}
+                    type="text"
+                    value={name}
+                    onChange={(e) => setname(e.target.value)}
+                    placeholder="Enter Category Name"
+                />
+                <button onClick={addcategory} >Add Category</button>
+            </form>
+        </div>
+      
+
+      <br></br>
       <span>Products</span>
       <div className={classes.container}>
+        {console.log("products", products)}
         {productError && <p className={classes.errorMsg}>{productError}</p>}
         {!productError &&
           (products?.length > 0 ? (
@@ -126,7 +162,11 @@ export const Home = ({ setIsAuthenticated }) => {
           ) : (
             <p className={classes.notFound}>No Products found.</p>
           ))}
+          
       </div>
+      <br></br>
+      
+
       <span>Shopping Cart</span>
       <div className={classes.container}>
         {cartError && <p className={classes.errorMsg}>{cartError}</p>}
@@ -142,6 +182,7 @@ export const Home = ({ setIsAuthenticated }) => {
           ) : (
             <p className={classes.notFound}>No Products found in your cart.</p>
           ))}
+          
       </div>
       <button className={classes.logout} onClick={logoutHandler}>
         Logout

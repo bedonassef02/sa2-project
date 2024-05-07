@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Login } from "./auth/Login.js";
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Home } from "./pages/Home/Home.js";
+import { AddCat } from "./pages/Home/AddCat.js";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("isAuthenticated"));
@@ -17,6 +18,7 @@ function App() {
             {isAuthenticated && <Redirect to='/products' />}
             <Redirect to='/' />
         </Switch>
+        <Route path="/addcategory" element={<AddCat></AddCat>}></Route>
     </Router>
   )
 }
