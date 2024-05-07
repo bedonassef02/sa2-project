@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  client:
+    build: ./client
+    container_name: client-container
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    networks:
+      - ecommerce-app
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
   cart-service:
     restart: always
     build:
@@ -8,17 +20,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3002:3000"
+    networks:
+      - ecommerce-app
     volumes:
-      - ./:/code
+      - ./cart-service:/code/cart-service
     depends_on:
       - cart-mongodb
+    environment:
+      MONGO_HOST: cart-mongodb
 
   cart-mongodb:
     image: mongo
+    container_name: cart-mongodb
     ports:
       - "27017:27017"
+    networks:
+      - ecommerce-app
     volumes:
-      - cart_mongodb:/data/db
+      - cart_mongodb_data:/data/db
 
   category-service:
     restart: always
@@ -27,17 +46,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3003:3000"
+    networks:
+      - ecommerce-app
     volumes:
-      - ./:/code
+      - ./category-service:/code/category-service
     depends_on:
       - category-mongodb
+    environment:
+      MONGO_HOST: category-mongodb
 
   category-mongodb:
     image: mongo
+    container_name: category-mongodb
     ports:
       - "27018:27017"
+    networks:
+      - ecommerce-app
     volumes:
-      - category_mongodb:/data/db
+      - category_mongodb_data:/data/db
 
   postgres:
     image: postgres:13.1
@@ -48,9 +74,11 @@ services:
       POSTGRES_PASSWORD: pass123
       POSTGRES_DB: users-db
     volumes:
-      - users-postgres-db:/var/lib/postgresql/data
+      - users_postgres_db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - ecommerce-app
 
   adminer:
     image: adminer
@@ -58,15 +86,19 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    networks:
+      - ecommerce-app
 
   users-service:
     build:
       context: ./users-service
       dockerfile: Dockerfile
-    container_name: users-service
+    container_name: users-service-container
     restart: always
     ports:
       - "3001:3000"
+    networks:
+      - ecommerce-app
     depends_on:
       - postgres
     environment:
@@ -76,7 +108,10 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
 
+networks:
+  ecommerce-app:
+
 volumes:
-  category_mongodb:
-  cart_mongodb:
-  users-postgres-db:
+  cart_mongodb_data:
+  category_mongodb_data:
+  users_postgres_db_data:

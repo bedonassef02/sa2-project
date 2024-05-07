@@ -1,0 +1,44 @@
+.formContainer {
+    margin: 0 auto;
+    background-color: #f3f3f3;
+    padding: 3rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 2rem;
+    width: 50%;
+}
+
+.label {
+    margin: 1rem;
+    display: flex;
+}
+
+.labelText {
+    flex: 1;
+}
+
+.input {
+    flex: 1;
+    margin: 0 1rem;
+    font-size: 1.5rem;
+    width: 100%;
+}
+
+.submit {
+    margin: 1rem;
+    display: block;
+    font-size: 1.5rem;
+    padding: 1rem;
+    width: 94%;
+    background: green;
+    border: 1px solid gray;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0px 1px 3px 0px black;
+    cursor: pointer;
+}
+
+.errorMsg {
+    color: red;
+    padding: 1rem;
+}

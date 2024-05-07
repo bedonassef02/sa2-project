@@ -1,0 +1,38 @@
+.container {
+  padding: 3rem;
+  display: ruby-text;
+  border: 1px dashed black;
+  margin: 1rem;
+}
+
+.errorMsg,
+.notFound {
+  color: red;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.weather {
+  font-size: 2rem;
+  padding: 1rem;
+  margin: 1rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  color: #0400ff;
+  text-align: center;
+}
+
+.logout {
+  margin: 0 1rem;
+  padding: 0.5rem 1rem;
+  width: 25%;
+  font-size: 2rem;
+  background: yellow;
+  cursor: pointer;
+}
+
+span {
+  font-size: 2rem;
+  color: black;
+  text-decoration: underline;
+}
