@@ -3,9 +3,12 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 const CategoryRoute = require('./src/category/CategoryRout');
 const morgan = require('morgan');
+const cors = require('cors');
 
 // Create Express app
 const app = express();
+
+app.use(cors());
 
 app.use(morgan('dev'));
 
