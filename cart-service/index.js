@@ -2,9 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 process.loadEnvFile(".env");
 const cartRouter = require("./src/cart/CartRouter");
+const cors = require('cors');
+
 
 // Create Express app
 const app = express();
+
+app.use(cors());
+
 const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies

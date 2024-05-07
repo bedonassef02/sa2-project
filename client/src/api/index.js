@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const usersServiceApi = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://localhost:3001/users',
 });
 
 const productsServiceApi = axios.create({
@@ -16,7 +16,7 @@ const shoppingCartServiceApi = axios.create({
     baseURL: 'http://localhost:5003/api',
 });
 
-export const userAuthenticate = payload => usersServiceApi.post(`/user/auth`, payload);
+export const userAuthenticate = payload => usersServiceApi.post(`/login`, payload);
 export const getAllProducts = () => productsServiceApi.get(`/products`);
 export const getWeather = () => weatherServiceApi.get(`/weather`);
 

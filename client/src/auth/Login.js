@@ -44,7 +44,7 @@ export const Login = ({ setIsAuthenticated }) => {
         <input
           className={classes.input}
           type="text"
-          name="username"
+          name="email"
           onChange={handleChange}
           autoComplete="off"
           required
