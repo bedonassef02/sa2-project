@@ -7,6 +7,7 @@ import api from "../../api";
 export const Home = ({ setIsAuthenticated }) => {
   const history = useHistory();
   const [products, setProducts] = useState([]);
+  const [Categories, setCategories] = useState([]);
   const [productError, setProductError] = useState(false);
   const [cart, setCart] = useState([]);
   const [cartError, setCartError] = useState(false);
@@ -18,8 +19,24 @@ export const Home = ({ setIsAuthenticated }) => {
     setIsAuthenticated(false);
     history.push("/");
   };
-
+  ///////////////catogory/////////////////////
   useEffect(async () => {
+    await api
+      .getCategories()
+      .then((res) => {
+        console.log("categories", res.data);
+        setCategories(res?.data?.data);
+      })
+      .catch((err) => {
+        console.log("products err", err);
+        setProductError(
+          err?.response?.data?.message ||
+            "The Products Service is under maintenance and it will be back soon!, Thanks for your patience!!"
+        );
+      });
+  }, []);
+///////////////////////////////////////////////////
+ /* useEffect(async () => {
     await api
       .getAllProducts()
       .then((products) => {
@@ -70,7 +87,7 @@ export const Home = ({ setIsAuthenticated }) => {
         );
       });
   }, []);
-
+*/
   return (
     <>
       <span>Weather</span>
@@ -78,6 +95,22 @@ export const Home = ({ setIsAuthenticated }) => {
         {weatherError && <p className={classes.errorMsg}>{weatherError}</p>}
         {!weatherError && weather}
       </p>
+      <span>Categories</span>
+      <div className={classes.container}>
+        {productError && <p className={classes.errorMsg}>{productError}</p>}
+        {!productError &&
+          (products?.length > 0 ? (
+            products.map(({ _id, name, price, description }, index) => (
+              <ProductCard
+                key={index}
+                details={{ _id, name, price, description }}
+                setLatestProductAddedToCart={setLatestProductAddedToCart}
+              />
+            ))
+          ) : (
+            <p className={classes.notFound}>No Products found.</p>
+          ))}
+      </div>
       <span>Products</span>
       <div className={classes.container}>
         {productError && <p className={classes.errorMsg}>{productError}</p>}
